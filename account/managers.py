@@ -2,35 +2,31 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class UserManager(BaseUserManager):
+    """
+    Custom manager for the custom NewUser model below
+    """
 
-    def create_user(self, email, username, phone_number, first_name, last_name, password=None):
-        """
-        Creates and saves a User with the given email and password.
-        """
+    def create_superuser(self, email, username, first_name, password,
+                         **other_fields):
+
+        # Set is_staff, is_superuser, and is_active to True as default
+        other_fields.setdefault('is_staff', True)
+        other_fields.setdefault('is_superuser', True)
+        other_fields.setdefault('is_active', True)
+
+        return self.create_user(email, username, first_name, password,
+                                **other_fields)
+
+    def create_user(self, email, username, first_name, password,
+                    **other_fields):
+
+        # Check if user has entered an email
         if not email:
-            raise ValueError('Users must have an email address')
-        if not username:
-            raise ValueError('Users must have a username')
+            raise ValueError('You must provide an email address')
 
+        # Set the values to the variables for creating a user account
         email = self.normalize_email(email)
-        user = self.model(email=email, username=username, phone_number=phone_number,
-                          first_name=first_name, last_name=last_name)
+        user = self.model(email=email, username=username,
+                          first_name=first_name, **other_fields)
         user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, username, phone_number, first_name, last_name, password=None):
-        """
-        Creates and saves a superuser with the given email and password.
-        """
-        user = self.create_user(
-            email,
-            username,
-            phone_number,
-            first_name,
-            last_name,
-            password=password,
-        )
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
+        user.save()
