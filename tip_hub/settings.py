@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # 3rd party
     'django_cleanup.apps.CleanupConfig',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,17 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'danial.azarpanah.dev@gmail.com'
 EMAIL_HOST_PASSWORD = 'dggyxgnvvaphnswo'
 EMAIL_PORT = 587
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '431729132053-dpvvq0s5fvj918sc893d56bavp8iip5j.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
+# LOGIN_URL = '/auth/login/google-oauth2/'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+SOCIAL_AUTH_URL_NAMESPACE = 'social'

@@ -6,7 +6,7 @@ class UserManager(BaseUserManager):
     Custom manager for the custom NewUser model below
     """
 
-    def create_superuser(self, email, username, first_name, password,
+    def create_superuser(self, email, username, first_name, last_name, password,
                          **other_fields):
 
         # Set is_staff, is_superuser, and is_active to True as default
@@ -14,10 +14,10 @@ class UserManager(BaseUserManager):
         other_fields.setdefault('is_superuser', True)
         other_fields.setdefault('is_active', True)
 
-        return self.create_user(email, username, first_name, password,
+        return self.create_user(email=email, username=username, first_name=first_name, last_name=last_name, password=password,
                                 **other_fields)
 
-    def create_user(self, email, username, first_name, password,
+    def create_user(self, email, username, first_name=None, last_name=None, password=None,
                     **other_fields):
 
         # Check if user has entered an email
@@ -27,6 +27,8 @@ class UserManager(BaseUserManager):
         # Set the values to the variables for creating a user account
         email = self.normalize_email(email)
         user = self.model(email=email, username=username,
-                          first_name=first_name, **other_fields)
+                          first_name=first_name, last_name=last_name,
+                          **other_fields)
         user.set_password(password)
         user.save()
+        return user

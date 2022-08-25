@@ -10,11 +10,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
     username = models.CharField(max_length=50, unique=True, verbose_name='نام کاربری')
-    phone_number = models.CharField(max_length=11, unique=True, blank=True, verbose_name='شماره موبایل')
+    phone_number = models.CharField(max_length=11, unique=True, blank=True, null=True, verbose_name='شماره موبایل')
     first_name = models.CharField(max_length=50, verbose_name='نام',
-                                  blank=True)
+                                  blank=True, null=True)
     last_name = models.CharField(max_length=50, verbose_name='نام خانوادگی',
-                                 blank=True)
+                                 blank=True, null=True)
     image = models.ImageField(upload_to='images/users', null=True, blank=True, verbose_name='تصویر')
     is_active = models.BooleanField(default=True, verbose_name='فعال')
     is_staff = models.BooleanField(default=False, verbose_name='کارمند')
