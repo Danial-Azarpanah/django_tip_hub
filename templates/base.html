@@ -46,11 +46,13 @@
             </div>
             <div class="d-block d-md-flex align-items-center pl-md-4">
                 <div class="dropdown notification-box">
-                    <div class="position-relative d-none d-md-block " type="button" id="dropdownMenuButton"
-                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{% static 'image/notification.png' %}" class="notification-img" alt="">
-                        <div class="badge">2</div>
-                    </div>
+                    {% if request.user.is_authenticated %}
+                        <div class="position-relative d-none d-md-block " type="button" id="dropdownMenuButton"
+                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{% static 'image/notification.png' %}" class="notification-img" alt="">
+                            <div class="badge">2</div>
+                        </div>
+                    {% endif %}
                     <div class="dropdown-menu notification-menu-items custom-bg"
                          aria-labelledby="dropdownMenuButton">
                         <a class="border-bottom" href="#"> ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ </a>
