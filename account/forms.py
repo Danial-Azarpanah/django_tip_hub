@@ -41,6 +41,13 @@ class UserCreationForm(forms.ModelForm):
 
 
 class UserLoginForm(AuthenticationForm):
+    """
+    Custom form for user login
+    """
+
+    username = forms.EmailField(label='email', widget=forms.EmailInput(attrs={'placeholder': 'آدرس ایمیل'}))
+    password = forms.CharField(label='password', widget=forms.PasswordInput(attrs={'placeholder': 'گذرواژه'}))
+
     error_messages = {
         "invalid_login":
             "کاربری با این مشخصات موجود نیست",
