@@ -117,7 +117,7 @@ class CustomPasswordResetView(PasswordResetView):
 
     # Redirect to login page if not authenticated
     def get(self, *args, **kwargs):
-        if not self.request.user.is_authenticated:
+        if self.request.user.is_authenticated:
             return redirect('account:login')
         return super().get(*args, **kwargs)
 
