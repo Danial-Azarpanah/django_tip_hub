@@ -54,13 +54,20 @@ class UserLoginForm(AuthenticationForm):
     }
 
 
-class UserChangeForm(forms.ModelForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    disabled password hash display field.
+class UserEditForm(forms.ModelForm):
     """
-    password = ReadOnlyPasswordHashField()
+    A form for editing users
+    with a little modification to fields
+    """
+
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'نام'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'نام خانوادگی'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'ایمیل'}))
+    phone_number = forms.CharField(max_length=11, min_length=11, widget=forms.TextInput(
+        attrs={'placeholder': 'شماره موبایل                                   مثال:۰۹۱۲۱۲۳۴۵۶۷'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'نام کاربری'}))
+    image = forms.ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'is_active')
+        fields = ('first_name', 'last_name', 'email', 'phone_number', 'username', 'image')

@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import User
-from .forms import UserCreationForm, UserChangeForm
+from .forms import UserCreationForm, UserEditForm
 
 admin.site.site_header = 'مدیریت سایت'
 admin.site.site_title = 'صفحه مدیریت'
@@ -12,7 +12,7 @@ admin.site.index_title = 'تیپ هاب'
 
 class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
-    form = UserChangeForm
+    form = UserEditForm
     add_form = UserCreationForm
 
     # The fields to be used in displaying the User model.

@@ -12,6 +12,7 @@ urlpatterns = [
     path("activate/(?P<uidb64>[0-9A-Za-z_\\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/",
          views.activate, name='activate'),
     path('profile', views.ProfileView.as_view(), name='profile'),
+    path('profile/edit/<int:pk>', views.ProfileEditView.as_view(), name='edit-profile'),
 
     # password reset urls
     path('reset-password/', views.CustomPasswordResetView.as_view(), name='reset_password'),
@@ -25,7 +26,7 @@ urlpatterns = [
                                                      success_url=reverse_lazy('account:password_reset_complete')),
          name="password_reset_confirm"),
 
-    path('reset_password/complete/',
+    path('reset-password/complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name="account/password_reset_done.html"),
          name="password_reset_complete"),
 ]

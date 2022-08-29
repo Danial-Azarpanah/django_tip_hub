@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    ویرایش حساب کاربری
+{% endblock %}
+
+{% block main %}
+    <main>
+        <section class="py-5">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-sm-9 col-md-11 col-lg-10">
+                        <div class="user-panel custom-bg">
+                            {{ form.non_field_errors }}
+                            <form class="user-panel-box" enctype="multipart/form-data" method="post">
+                                {% csrf_token %}
+
+                                {% if request.user.image %}
+                                    <div class="user-panel-profile">
+                                        <img src="{{ request.user.image.url }}" alt="تصویر پروفایل"
+                                             onclick="click_input()" class="profile_image">
+                                    </div>
+                                {% else %}
+                                    <div class="user-panel-profile">
+                                        <img src="{% static 'image/sutdent-prof.png' %}" alt="تصویر پروفایل"
+                                             onclick="click_input()" class="profile_image">
+                                    </div>
+                                {% endif %}
+
+                                <button class="change-profile-btn" hidden>
+                                    {{ form.image }}
+                                </button>
+
+                                <!-- item -->
+                                <div class="col-lg-6">
+                                    <div class="field">
+                                        <i class="fa fa-user"></i>
+                                        {{ form.first_name }}
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li style="color: #ad3f4a"
+                                                class="text-center">{{ form.first_name.errors }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- item -->
+                                <div class="col-lg-6">
+                                    <div class="field">
+                                        <i class="fa fa-user"></i>
+                                        {{ form.last_name }}
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li style="color: #ad3f4a"
+                                                class="text-center">{{ form.last_name.errors }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- item -->
+                                <div class="col-lg-6">
+                                    <div class="field">
+                                        <i class="fa fa-envelope"></i>
+                                        {{ form.email }}
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li style="color: #ad3f4a"
+                                                class="text-center">{{ form.email.errors }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- item -->
+                                <div class="col-lg-6">
+                                    <div class="field">
+                                        <i class="fa fa-phone"></i>
+                                        {{ form.phone_number }}
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li style="color: #ad3f4a"
+                                                class="text-center">{{ form.phone_number.errors }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- item -->
+                                <div class="col-lg-6">
+                                    <div class="field">
+                                        <i class="fa fa-user-circle"></i>
+                                        {{ form.username }}
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li style="color: #ad3f4a"
+                                                class="text-center">{{ form.username.errors }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- submit -->
+                                <div class="col-lg-12 d-flex justify-content-center my-3">
+                                    <button type="submit" class="btn custom-btn w-50">اعمال تغییرات</button>
+                                </div>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        function click_input() {
+            document.getElementById('id_image').click()
+        }
+    </script>
+{% endblock %}
+
