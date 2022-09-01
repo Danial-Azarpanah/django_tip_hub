@@ -22,18 +22,19 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('is_active', 'is_superuser', 'is_staff')
     fieldsets = (
         (None, {'fields': ('email', 'username', 'phone_number', 'password')}),
-        ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'image')}),
+        ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'image', 'bio',
+                                     'instagram', 'github', 'linkedin', 'twitter')}),
         ('دسترسی‌ها', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name', 'password1', 'password2'),
-        }),
+        (None, {'fields': ('email', 'username', 'phone_number', 'password')}),
+        ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'image', 'bio',
+                                     'instagram', 'github', 'linkedin', 'twitter')}),
+        ('دسترسی‌ها', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
     )
-    search_fields = ('email', 'username')
+    search_fields = ('email', 'username', 'bio')
     ordering = ('email',)
     filter_horizontal = ()
 

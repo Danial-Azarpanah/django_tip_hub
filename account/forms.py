@@ -7,15 +7,19 @@ from .models import User
 
 
 class UserCreationForm(forms.ModelForm):
-    """A form for creating new users. Includes all the required
-    fields, plus a repeated password."""
-    email = forms.EmailField(label='email', widget=forms.EmailInput(attrs={'placeholder': 'آدرس ایمیل'}))
-    username = forms.CharField(label='username', widget=forms.TextInput(attrs={'placeholder': 'نام کاربری'}))
-    password = forms.CharField(label='password', widget=forms.PasswordInput(attrs={'placeholder': 'گذرواژه'}))
+    """
+    A form for creating new users. Includes all the required
+    fields, plus a repeated password.
+    """
+    email = forms.EmailField(label='ایمیل', widget=forms.EmailInput(attrs={'placeholder': 'آدرس ایمیل'}))
+    username = forms.CharField(label='نام کاربری', widget=forms.TextInput(attrs={'placeholder': 'نام کاربری'}))
+    password = forms.CharField(label='گذرواژه', widget=forms.PasswordInput(attrs={'placeholder': 'گذرواژه'}))
 
     class Meta:
         model = User
-        fields = ('email', 'username')
+        fields = ('first_name', 'last_name', 'email',
+                  'phone_number', 'username', 'bio', 'image',
+                  'instagram', 'github', 'linkedin', 'twitter')
 
     def clean_password(self):
         # Check that the two password entries match
@@ -44,9 +48,8 @@ class UserLoginForm(AuthenticationForm):
     """
     Custom form for user login
     """
-
-    username = forms.EmailField(label='email', widget=forms.EmailInput(attrs={'placeholder': 'آدرس ایمیل'}))
-    password = forms.CharField(label='password', widget=forms.PasswordInput(attrs={'placeholder': 'گذرواژه'}))
+    username = forms.EmailField(label='ایمیل', widget=forms.EmailInput(attrs={'placeholder': 'آدرس ایمیل'}))
+    password = forms.CharField(label='گذرواژه', widget=forms.PasswordInput(attrs={'placeholder': 'گذرواژه'}))
 
     error_messages = {
         "invalid_login":
@@ -59,15 +62,61 @@ class UserEditForm(forms.ModelForm):
     A form for editing users
     with a little modification to fields
     """
-
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'نام'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'نام خانوادگی'}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'ایمیل'}))
-    phone_number = forms.CharField(max_length=11, min_length=11, widget=forms.TextInput(
-        attrs={'placeholder': 'شماره موبایل                                   مثال:۰۹۱۲۱۲۳۴۵۶۷'}))
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'نام کاربری'}))
-    image = forms.ImageField(required=False)
+    first_name = forms.CharField(
+        label='نام',
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'نام'}))
+    last_name = forms.CharField(
+        label='نام خانوادگی',
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'نام خانوادگی'}))
+    email = forms.EmailField(
+        label='ایمیل',
+        widget=forms.EmailInput(attrs={'placeholder': 'ایمیل'}))
+    phone_number = forms.CharField(
+        label='شماره موبایل',
+        required=False,
+        max_length=11,
+        min_length=11,
+        widget=forms.TextInput(
+            attrs={'placeholder': 'شماره موبایل                                   مثال:۰۹۱۲۱۲۳۴۵۶۷'}))
+    username = forms.CharField(
+        label='نام کاربری',
+        widget=forms.TextInput(attrs={'placeholder': 'نام کاربری'}))
+    bio = forms.CharField(
+        label='بیوگرافی',
+        required=False,
+        widget=forms.Textarea(
+            attrs={'placeholder': 'بیوگرافی',
+                   'class': 'comment-area w-100',
+                   'style': 'background-color: rgba(0, 0, 0, 0.05);'}))
+    instagram = forms.CharField(
+        label='آدرس اینستاگرام',
+        required=False, widget=forms.URLInput(
+            attrs={'placeholder': 'آدرس اینستاگرام'}
+        ))
+    github = forms.CharField(
+        label='آدرس گیتهاب',
+        required=False,
+        widget=forms.URLInput(
+            attrs={'placeholder': 'آدرس گیتهاب'}
+        ))
+    linkedin = forms.CharField(
+        label='آدرس لینکدین',
+        required=False,
+        widget=forms.URLInput(
+            attrs={'placeholder': 'آدرس لینکدین'}
+        ))
+    twitter = forms.CharField(
+        label='آدرس گیتهاب',
+        required=False,
+        widget=forms.URLInput(
+            attrs={'placeholder': 'آدرس توییتر'}
+        ))
+    image = forms.ImageField(required=False, label='تصویر')
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'phone_number', 'username', 'image')
+        fields = ('first_name', 'last_name', 'email',
+                  'phone_number', 'username', 'bio', 'image',
+                  'instagram', 'github', 'linkedin', 'twitter')
