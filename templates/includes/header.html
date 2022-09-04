@@ -70,65 +70,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- navbar -->
-            <nav class="nav-menu p-0 m-0 d-flex d-sm-flex d-md-none d-lg-none">
-                <li id="" class="mx-3"><a class="nav-menu-item-mob">زبان های برنامه نویسی
-                    <i class="fa fa-chevron-left chev-icon pr-1"></i>
-                </a>
-                    <ul class="sub-menu-mob">
-                        <a href="">جاوا</a>
-                        <a href="">پایتون </a>
-                        <a href="">آیتم</a>
-                        <a href=""> آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                    </ul>
-                </li>
-                <li id="" class="mx-3"><a class="nav-menu-item-mob ">فریمورک
-                    <i class="fa fa-chevron-left chev-icon pr-1"></i>
-                </a>
-                    <ul class="sub-menu-mob">
-                        <a href="">جاوا</a>
-                        <a href="">پایتون </a>
-                        <a href="">آیتم</a>
-                        <a href=""> آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                    </ul>
-                </li>
-                <li id="" class="mx-3">
-                    <a class="nav-menu-item-mob ">طراحی وب
-                        <i class="fa fa-chevron-left chev-icon pr-1"></i>
-                    </a>
-                    <ul class="sub-menu-mob">
-                        <a href="">جاوا</a>
-                        <a href="">پایتون </a>
-                        <a href="">آیتم</a>
-                        <a href=""> آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                    </ul>
-                </li>
-                <li id="" class="mx-3"><a class="nav-menu-item-mob">زبان های برنامه نویسی
-                    <i class="fa fa-chevron-left chev-icon pr-1"></i>
-                </a>
-                    <ul class="sub-menu-mob">
-                        <a href="">جاوا</a>
-                        <a href="">پایتون </a>
-                        <a href="">آیتم</a>
-                        <a href=""> آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                        <a href="">آیتم</a>
-                    </ul>
-                </li>
-
-            </nav>
-
         </div>
 
 
@@ -142,7 +83,7 @@
             </div>
             <div class="logo">
                 <a href="{% url 'home:main' %}"><img src="{% static 'image/logo.png' %}" class="logo-img img-fluid"
-                                          alt=""/></a>
+                                                     alt=""/></a>
             </div>
 
             <div class="d-flex align-items-center">
@@ -193,48 +134,19 @@
 </header>
 
 <nav class="nav-menu nav-menu-pc  d-none d-md-flex px-4" id="navbar">
-    <li id="" class="mx-3 menu-item"><a href="" class="nav-menu-item ">زبان های برنامه نویسی </a>
-        <ul class="sub-menu">
-            <a href="">جاوا</a>
-            <a href="">پایتون </a>
-            <a href="">آیتم</a>
-            <a href=""> آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-        </ul>
-    </li>
-    <li id="" class="mx-3 menu-item"><a href="" class="nav-menu-item">فریمورک </a>
-        <ul class="sub-menu">
-            <a href="">جنگو</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-        </ul>
-    </li>
-    <li id="" class="mx-3 menu-item"><a href="" class="nav-menu-item">طراحی وب</a>
-        <ul class="sub-menu">
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-        </ul>
-    </li>
-    <li id="" class="mx-3 menu-item"><a href="" class="nav-menu-item">مهارت های ارتباطی</a>
-        <ul class="sub-menu">
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-            <a href="">آیتم</a>
-        </ul>
-    </li>
+
+    {% for category in categories %}
+        {% if category.parent == None %}
+
+            <li id="" class="mx-3 menu-item"><a href="" class="nav-menu-item ">{{ category.title }}</a>
+                <ul class="sub-menu">
+                    {% for child in category.children.all %}
+                        <a href="">{{ child.title }}</a>
+                    {% endfor %}
+                </ul>
+            </li>
+
+        {% endif %}
+    {% endfor %}
+
 </nav>
