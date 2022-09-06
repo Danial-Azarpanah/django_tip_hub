@@ -20,7 +20,7 @@
                         <div class="col-md-6 col-lg-4 my-2">
                             <div class="custom-bg">
                                 <div class="video-card">
-                                    <a href="#" class="position-relative d-block ">
+                                    <a href="{% url 'video:video_detail' video.id %}" class="position-relative d-block ">
                                         <img src="{{ video.image.url }}" alt="" class="img-fluid w-100 h-100">
                                         <div class="video-play-btn">
                                             <i class="fa fa-play"></i>
@@ -38,7 +38,7 @@
                                                 <i class="fa fa-heart"></i>
                                             </div>
                                             <div>
-                                                <span>22</span>
+                                                <span>{{ video.comments.count }}</span>
                                                 <i class="fa fa-comment"></i>
                                             </div>
                                         </div>

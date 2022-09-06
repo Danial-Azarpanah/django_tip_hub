@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # 3rd party
     'django_cleanup.apps.CleanupConfig',
     'social_django',
+    'django_jalali',
 ]
 
 MIDDLEWARE = [

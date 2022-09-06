@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Video, Tag
+from .models import Category, Video, Tag, Comment
 
 
 @admin.register(Category)
@@ -19,3 +19,9 @@ class VideoAdmin(admin.ModelAdmin):
     list_display = ['title', 'creator', 'show_image']
     list_filter = ['category', 'tag']
     ordering = ['-created_at']
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["user", "parent", "video"]
+    search_fields = ["user__email", "body", "video__title"]

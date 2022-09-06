@@ -1,6 +1,10 @@
 from django.core.validators import FileExtensionValidator
 from django.utils.html import format_html
 from django.db import models
+from django.utils.timezone import utc
+import datetime
+
+from django_jalali.db import models as jmodels
 
 from account.models import User
 
@@ -59,7 +63,7 @@ class Video(models.Model):
                              validators=[
                                  FileExtensionValidator(
                                      allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = jmodels.jDateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE,
                                 related_name='videos',
                                 verbose_name='سازنده محتوا')
@@ -82,3 +86,50 @@ class Video(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    """
+    Class for user comments on videos
+    """
+    video = models.ForeignKey(Video, on_delete=models.CASCADE,
+                              related_name='comments', verbose_name='ویدئوی مربوطه')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='comments', verbose_name='کاربر')
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL,
+                               related_name='replies', null=True, blank=True,
+                               verbose_name='کامنت پدر')
+    body = models.TextField(verbose_name='متن کامنت')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      verbose_name='تاریخ و زمان')
+
+    class Meta:
+        verbose_name = 'کامنت'
+        verbose_name_plural = 'کامنت‌ها'
+
+    def get_time_diff(self):
+        """
+        Return the time difference between
+        comment's submit time and now
+        """
+        if self.created_at:
+            now = datetime.datetime.utcnow().replace(tzinfo=utc)
+            timediff = now - self.created_at
+
+            if timediff.days > 365:
+                return f'{timediff // 365} سال پیش'
+            elif timediff.days > 30:
+                return f'{timediff // 30} ماه پیش'
+            elif timediff.days > 0:
+                return f'{timediff.days} روز پیش'
+            elif timediff.seconds > 3600:
+                return f'{timediff.seconds // 3600} ساعت پیش'
+            elif timediff.seconds > 60:
+                return f'{timediff.seconds // 60} دقیقه پیش'
+            else:
+                return f'{timediff.seconds} ثانیه پیش'
+
+    def __str__(self):
+        return self.body[:20]
+
+

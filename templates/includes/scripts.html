@@ -9,17 +9,4 @@
 <script src="{% static 'components/owl-carousel/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/script.js' %}"></script>
 <script>
-    let checkboxInput = document.querySelector('.checkbox-input')
-    let passwordInput = document.querySelector('.password-input')
-    let isHide = true
-    checkboxInput.addEventListener('click', () => {
-        if (isHide) {
-            passwordInput.type = 'text'
-            isHide = false
-        } else {
-            passwordInput.type = 'password'
-            isHide = true
-        }
-    })
-
 </script>

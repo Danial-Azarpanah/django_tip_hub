@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jformat %}
+
+{% block title %}
+    {{ video.title }}
+{% endblock %}
+
+{% block main %}
+    <main>
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div>
+                            <!-- video -->
+                            <div class="video-player-box">
+                                <div class="video-icon">
+                                    <div class="btn video-btn" onclick="playvideo()" id="videobtn">
+                                        <img src="{% static 'image/play-video-btn.png' %}" alt="">
+                                    </div>
+                                </div>
+                                <div class="video">
+                                    <video width="100%" id="myVideo" autoplay controls>
+                                        <source src="{{ video.video.url }}" type="video/mp4">
+                                    </video>
+                                    <img src="{{ video.image.url }}" width="100%" height="100%"
+                                         class="position-absolute video-poster" alt="">
+
+                                    <div class="video-overlay"></div>
+                                    <div class="video-description px-2 text-white">
+
+                                    </div>
+                                    <h5 class="close-btn" onclick="stopPlayer()">X</h5>
+                                </div>
+                            </div>
+                            <!-- end video -->
+                            <!-- title -->
+                            <h3 class="video-title my-3">{{ video.title }}
+                            </h3>
+                            <div class="d-flex align-items-center justify-content-between border-bottom pb-3">
+                                <p class="color78">
+                                    {{ video.created_at|jformat:"%Y/%m/%d" }}
+                                </p>
+                                <div class="d-flex align-items-center view-like">
+                                    <div class="mx-3">
+                                        <span>22</span>
+                                        <i class="fa fa-eye"></i>
+                                    </div>
+                                    <div>
+                                        <span>21</span>
+                                        <i class="fa fa-heart-o" type='button' aria-hidden="true"></i>
+                                        <!-- <i class="fa fa-heart liked" type='button' aria-hidden="true" ></i> -->
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- description -->
+                            <div class="border-bottom pb-3" id="comment_body">
+                                <h4 class="my-3">درباره فیلم</h4>
+                                <p class="color78">{{ video.description }}</p>
+                                <div class="labels">
+                                    <h4 class="my-3">برچسب ها</h4>
+                                    <ul class="d-flex align-items-center">
+                                        {% for tag in video.tag.all %}
+                                            <li><a href="#" title="">#{{ tag }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- end des -->
+
+                            <!-- comments -->
+                            <div>
+
+                                <div class="py-3">
+                                    <span>{{ video.comments.count }}</span>
+                                    <span>نظر</span>
+                                </div>
+
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input id="parent_id" name="parent_id" value="" type="hidden">
+                                    <textarea class="w-100 p-2 comment-area" name="body" id="" cols="30" rows="10"
+                                              placeholder="دیدگاه خود را بنویسید"></textarea>
+                                    <div class="d-flex align-items-center justify-content-end pt-3">
+                                        <button class="btn custom-btn" type="submit">ارسال نظر</button>
+                                    </div>
+                                </form>
+                                <!-- comment -->
+                                {% for comment in video.comments.all %}
+                                    {% if comment.parent == None %}
+                                        <div class="comment my-3 p-2">
+                                            <div class=" d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    {% if comment.user.image %}
+                                                        <img src="{{ comment.user.image.url }}" alt="student"
+                                                             class="user-profile">
+                                                    {% else %}
+                                                        <img src="{% static "image/sutdent-prof.png" %}" alt="student"
+                                                             class="user-profile">
+                                                    {% endif %}
+                                                    <p class="user-name pr-2">{{ comment.user.get_full_name }}</p>
+                                                </div>
+
+                                                <p class="comment-date-time">{{ comment.get_time_diff }}</p>
+                                            </div>
+                                            <p class="px-4 py-2 comment-text text-justify">{{ comment.body }}</p>
+
+                                            <div class="d-flex align-items-center justify-content-end reply"
+                                                 type='button' onclick="reply({{ comment.id }})">
+                                                <i class="fa fa-reply"></i>
+                                                <p>پاسخ به این نظر</p>
+                                            </div>
+                                        </div>
+                                        {% for reply in comment.replies.all %}
+                                            <div class="comment my-3 p-2 comment-child">
+                                                <div class=" d-flex align-items-center justify-content-between">
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        {% if reply.user.image %}
+                                                            <img src="{{ reply.user.image.url }}" alt="student"
+                                                                 class="user-profile">
+                                                        {% else %}
+                                                            <img src="{% static "image/sutdent-prof.png" %}"
+                                                                 alt="student"
+                                                                 class="user-profile">
+                                                        {% endif %}
+                                                        <p class="user-name pr-2">{{ reply.user.get_full_name }}</p>
+                                                    </div>
+
+                                                    <p class="comment-date-time">{{ reply.get_time_diff }}</p>
+                                                </div>
+                                                <p class="px-4 py-2 comment-text text-justify">
+                                                    {{ reply.body }}
+                                                </p>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                <!-- end comment -->
+                            </div>
+                            <!-- end comments -->
+                        </div>
+                    </div>
+                    <!-- main -->
+                    <!-- side -->
+                    <aside class="col-md-4 ">
+                        <div class="custom-bg p-2 teacher-card">
+                            <div class="border-bottom py-3 text-center">
+                                <h4>درباره استاد</h4>
+                            </div>
+                            <div class="d-flex align-items-center py-3">
+                                {% if video.creator.image %}
+                                    <img src="{{ video.creator.image.url }}" alt="student" class="teacher-profile">
+                                {% else %}
+                                    <img src="{% static 'image/sutdent-prof.png' %}" alt="student"
+                                         class="teacher-profile">
+                                {% endif %}
+                                <p class="user-name pr-2">{{ video.creator.get_full_name }}</p>
+                            </div>
+                            <p class="color78 teacher-description py-3">{{ video.creator.bio }}</p>
+
+                            {% if video.creator.instagram %}
+                                <div class="teacher-social-media d-flex align-items-center justify-content-center flex-wrap">
+                                    <a href="{{ video.creator.instagram }}"> <i class="fa fa-instagram"></i></a>
+                                    <a href="{{ video.creator.github }}"> <i class="fa fa-github"></i></a>
+                                    <a href="{{ video.creator.linkedin }}"> <i class="fa fa-linkedin"></i></a>
+                                    <a href="{{ video.creator.twitter }}"> <i class="fa fa-twitter"></i></a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </aside>
+                    <!-- end side -->
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        const videobtn = document.querySelector('.video-btn');
+        const video = document.querySelector('.video');
+        const videotag = document.querySelector('video')
+        const videoDescription = document.querySelector('.video-description')
+        const closeBtn = document.querySelector('.close-btn')
+        const videoPoster = document.querySelector('.video-poster')
+        const videoOverlay = document.querySelector('.video-overlay')
+
+        function stopPlayer() {
+            videobtn.style.display = "block";
+            closeBtn.style.display = 'none';
+            videoPoster.style.display = 'inline'
+            video.style.zIndex = '-1'
+            videotag.pause()
+            videotag.style.borderRadius = '20px'
+            videoDescription.style.display = 'flex'
+            videotag.controls = false
+            videotag.style.borderRadius = '15px'
+            videoOverlay.style.display = 'block'
+        }
+
+        function playvideo() {
+            videobtn.style.display = "none";
+            video.style.zIndex = '22222'
+            videotag.autoplay = true
+            videotag.play()
+            videotag.style.borderRadius = '20px'
+            videotag.controls = true
+            videoDescription.style.display = 'none'
+            closeBtn.style.display = 'block'
+            videoPoster.style.display = 'none'
+            videoOverlay.style.display = 'none'
+        }
+
+        function reply(id) {
+            document.getElementById("parent_id").value = id;
+            window.location.href = "#comment_body"
+        }
+    </script>
+{% endblock %}
