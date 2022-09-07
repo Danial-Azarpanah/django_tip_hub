@@ -12,10 +12,13 @@
                     <a href="{% url 'home:main' %}"><img src="{% static 'image/logo.png' %}" class="logo-img img-fluid"
                                                          alt=""/></a>
                 </div>
-                <div class="nav-search-btn">
-                    <input type="search" placeholder="جستجو">
-                    <i class="fa fa-search"></i>
-                </div>
+                <form class="nav-search-btn" method="GET" action="{% url "video:search" %}">
+                    <input type="search" name="q" placeholder="جستجو"
+                    value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+                    <button type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
 
             </div>
             <div class="d-block d-md-flex align-items-center pl-md-4">

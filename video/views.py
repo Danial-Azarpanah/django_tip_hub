@@ -44,3 +44,19 @@ def category_detail(request, slug):
 
     context = {"videos": objects_list, "category": category}
     return render(request, 'video/category_list.html', context)
+
+
+def search(request):
+    """
+    A view to search all
+    video titles with pagination
+    """
+    q = request.GET.get("q")
+    videos = Video.objects.filter(title__icontains=q)
+
+    # pagination
+    page_number = request.GET.get("page")
+    paginator = Paginator(videos, 1)
+    objects_list = paginator.get_page(page_number)
+
+    return render(request, "video/search_result.html", {"videos": objects_list})
