@@ -138,10 +138,10 @@
     {% for category in categories %}
         {% if category.parent == None %}
 
-            <li id="" class="mx-3 menu-item"><a href="" class="nav-menu-item ">{{ category.title }}</a>
+            <li id="" class="mx-3 menu-item"><a href="{% url "video:category_detail" category.slug %}" class="nav-menu-item ">{{ category.title }}</a>
                 <ul class="sub-menu">
                     {% for child in category.children.all %}
-                        <a href="">{{ child.title }}</a>
+                        <a href="{% url "video:category_detail" child.slug %}">{{ child.title }}</a>
                     {% endfor %}
                 </ul>
             </li>
