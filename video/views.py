@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.views.generic import ListView
 
-from hitcount.views import HitCountDetailView, HitCountMixin
+from hitcount.views import HitCountMixin
 from hitcount.utils import get_hitcount_model
 
 from .models import Video, Comment, Category
