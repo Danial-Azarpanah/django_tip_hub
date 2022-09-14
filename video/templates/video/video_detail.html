@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load jformat %}
+{% load hitcount_tags %}
 
 {% block title %}
     {{ video.title }}
@@ -44,7 +45,7 @@
                                 </p>
                                 <div class="d-flex align-items-center view-like">
                                     <div class="mx-3">
-                                        <span>22</span>
+                                        <span>{% get_hit_count for video %}</span>
                                         <i class="fa fa-eye"></i>
                                     </div>
                                     <div>

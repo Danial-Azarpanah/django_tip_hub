@@ -47,8 +47,9 @@ INSTALLED_APPS = [
 
     # 3rd party
     'django_cleanup.apps.CleanupConfig',
-    'social_django',
-    'django_jalali',
+    'social_django',  # for Google authentication process
+    'django_jalali',  # for converting Georgian calendar to Persian
+    'hitcount',  # for counting the individual views of videos
 ]
 
 MIDDLEWARE = [

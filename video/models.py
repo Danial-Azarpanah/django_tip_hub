@@ -1,4 +1,6 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.validators import FileExtensionValidator
+from hitcount.models import HitCount
 from django.utils.html import format_html
 from django.utils.timezone import utc
 from django.db import models
@@ -65,6 +67,8 @@ class Video(models.Model):
                                      allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     likes = models.ManyToManyField(User, related_name="likes", default=None, blank=True)
     like_count = models.BigIntegerField(default="0")
+    hit_count_generic = GenericRelation(HitCount, object_id_field='object_p',
+                                        related_query_name='hit_count_generic_relation')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE,
                                 related_name='videos',

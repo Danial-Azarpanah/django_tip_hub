@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load hitcount_tags %}
 
 {% block title %}
     تیپ هاب | خانه
@@ -32,7 +33,7 @@
                                         </div>
                                         <div class="video-card-details">
                                             <div>
-                                                <span>22</span>
+                                                <span>{% get_hit_count for video %}</span>
                                                 <i class="fa fa-eye"></i>
                                             </div>
                                             <div>

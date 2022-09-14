@@ -2,6 +2,9 @@ from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.views.generic import ListView
 
+from hitcount.views import HitCountDetailView, HitCountMixin
+from hitcount.utils import get_hitcount_model
+
 from .models import Video, Comment, Category
 
 
@@ -23,6 +26,17 @@ def video_detail(request, pk):
     video = get_object_or_404(Video, id=pk)
     context = {"video": video}
 
+    # Hit (visit) counter algorythm
+    hit_count = get_hitcount_model().objects.get_for_object(video)
+    hits = hit_count.hits
+    hitcontext = context['hitcount'] = {'pk': hit_count.pk}
+    hit_count_response = HitCountMixin.hit_count(request, hit_count)
+    if hit_count_response.hit_counted:
+        hits = hits + 1
+        hitcontext['hit_counted'] = hit_count_response.hit_counted
+        hitcontext['hit_message'] = hit_count_response.hit_message
+        hitcontext['total_hits'] = hits
+
     if request.user.is_authenticated:
         # Check if the video is liked by the user
         if video.likes.filter(email=request.user.email).exists():
@@ -30,6 +44,7 @@ def video_detail(request, pk):
         else:
             context["is_liked"] = False
 
+    # if method is POST, so we're getting comment or reply from a user
     if request.method == "POST":
         parent_id = request.POST.get("parent_id")
         body = request.POST.get("body")
