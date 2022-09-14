@@ -1,19 +1,20 @@
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import CreateView, TemplateView, UpdateView
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.views import PasswordResetView
 from django.template.loader import render_to_string
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
 from django.core.mail import EmailMessage
 from django.contrib.auth import login
 from django.urls import reverse_lazy
-from django.http import HttpResponse
 
 from .forms import UserCreationForm, UserLoginForm, UserEditForm
 from .tokens import account_activation_token
 from .models import User
+from video.models import Video
 
 
 class LoginUserView(LoginView):
@@ -140,3 +141,30 @@ def activate(request, uidb64, token):
         return redirect('home:main')
     else:
         return HttpResponse('Activation link is invalid!')
+
+
+def like(request):
+    """
+    View to like videos with ajax
+    """
+    if request.method == "POST":
+        result = ""
+        id = int(request.POST.get("videoid"))
+        video = get_object_or_404(Video, id=id)
+
+        # If user has already liked the video, so unlike it.
+        if video.likes.filter(id=request.user.id).exists():
+            video.likes.remove(request.user)
+            video.like_count -= 1
+            result = video.like_count,
+            liked = False
+            video.save()
+        # If user hasn't liked the video yet, like it.
+        else:
+            video.likes.add(request.user)
+            video.like_count += 1
+            result = video.like_count
+            liked = True
+            video.save()
+
+        return JsonResponse({"result": result, "liked": liked})

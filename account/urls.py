@@ -14,6 +14,9 @@ urlpatterns = [
     path('profile', views.ProfileView.as_view(), name='profile'),
     path('profile/edit/<int:pk>', views.ProfileEditView.as_view(), name='edit-profile'),
 
+    # video liking url
+    path("like", views.like, name="like"),
+
     # password reset urls
     path('reset-password/', views.CustomPasswordResetView.as_view(), name='reset_password'),
 

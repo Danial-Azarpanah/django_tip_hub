@@ -1,7 +1,6 @@
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import ListView, DetailView
-from django.views.generic.list import MultipleObjectMixin
+from django.core.paginator import Paginator
+from django.views.generic import ListView
 
 from .models import Video, Comment, Category
 
@@ -22,11 +21,21 @@ def video_detail(request, pk):
     with comment and reply capability
     """
     video = get_object_or_404(Video, id=pk)
+    context = {"video": video}
+
+    if request.user.is_authenticated:
+        # Check if the video is liked by the user
+        if video.likes.filter(email=request.user.email).exists():
+            context["is_liked"] = True
+        else:
+            context["is_liked"] = False
+
     if request.method == "POST":
         parent_id = request.POST.get("parent_id")
         body = request.POST.get("body")
         Comment.objects.create(body=body, video=video, user=request.user, parent_id=parent_id)
-    return render(request, "video/video_detail.html", context={"video": video})
+
+    return render(request, "video/video_detail.html", context)
 
 
 def category_detail(request, slug):

@@ -48,11 +48,26 @@
                                         <i class="fa fa-eye"></i>
                                     </div>
                                     <div>
-                                        <span>21</span>
-                                        <i class="fa fa-heart-o" type='button' aria-hidden="true"></i>
-                                        <!-- <i class="fa fa-heart liked" type='button' aria-hidden="true" ></i> -->
+                                        <span class="" id="like_count">{{ video.like_count }}</span>
+                                        {% if request.user.is_authenticated %}
+                                            <button class="btn btn-link text-dark p-0 border-0 btn-outline-light"
+                                                    id="like_button" value="{{ video.id }}">
+                                                {% if is_liked %}
+                                                    <i class="fa fa-heart" id="heart" type='button'
+                                                       aria-hidden="true"></i>
+                                                {% else %}
+                                                    <i class="fa fa-heart-o" id="heart" type='button'
+                                                       aria-hidden="true"></i>
+                                                {% endif %}
+                                            </button>
+                                        {% else %}
+                                            <a class="btn btn-link text-dark p-0 border-0 btn-outline-light"
+                                               id="" href="{% url "account:login" %}">
+                                                <i class="fa fa-heart-o" id="heart" type='button'
+                                                   aria-hidden="true"></i>
+                                            </a>
+                                        {% endif %}
                                     </div>
-
                                 </div>
 
                             </div>
@@ -215,5 +230,29 @@
             document.getElementById("parent_id").value = id;
             window.location.href = "#comment_body"
         }
+
+        $(document).on("click", "#like_button", function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "{% url "account:like" %}",
+                data: {
+                    videoid: $("#like_button").val(),
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                    action: "post"
+                },
+                success: function (json) {
+                    document.getElementById("like_count").innerHTML = json["result"]
+                    if (json["liked"] === true) {
+                        document.getElementById("heart").className = "fa fa-heart";
+                    } else {
+                        document.getElementById("heart").className = "fa fa-heart-o";
+                    }
+                },
+                error: function (xhr, errmsg, err) {
+
+                }
+            });
+        })
     </script>
 {% endblock %}
