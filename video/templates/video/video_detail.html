@@ -175,7 +175,9 @@
                                 {% endif %}
                                 <p class="user-name pr-2">{{ video.creator.get_full_name }}</p>
                             </div>
-                            <p class="color78 teacher-description py-3">{{ video.creator.bio }}</p>
+                            {% if video.creator.bio %}
+                                <p class="color78 teacher-description py-3">{{ video.creator.bio }}</p>
+                            {% endif %}
 
                             {% if video.creator.instagram %}
                                 <div class="teacher-social-media d-flex align-items-center justify-content-center flex-wrap">

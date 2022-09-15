@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.views.generic import ListView
@@ -76,7 +77,13 @@ def search(request):
     video titles with pagination
     """
     q = request.GET.get("q")
-    videos = Video.objects.filter(title__icontains=q)
+
+    # Search algorythm to search video tags, title and description
+    videos = Video.objects.filter(Q(tag__title__icontains=q))
+    if not videos:
+        videos = Video.objects.filter(Q(title__icontains=q))
+        if not videos:
+            videos = Video.objects.filter(Q(description__icontains=q))
 
     # pagination
     page_number = request.GET.get("page")

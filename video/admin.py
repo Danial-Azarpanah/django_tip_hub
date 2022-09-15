@@ -15,11 +15,11 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
-    search_fields = ['title', 'description', 'creator', 'tag']
+    search_fields = ['title', 'description', 'creator__username', 'tag__title']
     list_display = ['title', 'creator', 'show_image']
     list_filter = ['category', 'tag']
     ordering = ['-created_at']
-
+    exclude = ['likes']
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
