@@ -14,7 +14,7 @@
                 </div>
                 <form class="nav-search-btn" method="GET" action="{% url "video:search" %}">
                     <input type="search" name="q" placeholder="جستجو"
-                    value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+                           value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
                     <button type="submit">
                         <i class="fa fa-search"></i>
                     </button>
@@ -27,14 +27,33 @@
                         <div class="position-relative d-none d-md-block " type="button" id="dropdownMenuButton"
                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="{% static 'image/notification.png' %}" class="notification-img" alt="">
-                            <div class="badge">2</div>
+                            <div class="badge" id="notif_counter">{{ total_notifs }}</div>
                         </div>
                     {% endif %}
                     <div class="dropdown-menu notification-menu-items custom-bg"
                          aria-labelledby="dropdownMenuButton">
-                        <a class="border-bottom" href="#"> ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ </a>
-                        <a class="border-bottom" href="#"> ایپسوم متن ساختگی با تولید </a>
-                        <a class="border-bottom" href="#"> ایپسوم متن ساختگی با تولید سادگی</a>
+
+                        {% if admin_notif %}
+                            {% for notif in admin_notif %}
+                                <a class="border-bottom"
+                                   id="delete_admin_notif"
+                                   onclick="delete_admin_notif({{ notif.id }})"
+                                   href="#"
+                                   style="color: #ad3f4a">ادمین سایت: {{ notif.message }}</a>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if user_notif %}
+                            {% for notif in user_notif %}
+                                <a class="border-bottom"
+                                   id="delete_user_notif"
+                                   onclick="delete_user_notif('{{ notif.id }}', '{{ notif.comment.video.id }}', '{{ notif.comment.id }}')">
+                                    {{ notif.sender.username }}
+                                    به کامنت شما در ویدئوی
+                                    "{{ notif.comment.video.title }}" پاسخ داد
+                                </a>
+                            {% endfor %}
+                        {% endif %}
 
                     </div>
                 </div>
@@ -141,7 +160,8 @@
     {% for category in categories %}
         {% if category.parent == None %}
 
-            <li id="" class="mx-3 menu-item"><a href="{% url "video:category_detail" category.slug %}" class="nav-menu-item ">{{ category.title }}</a>
+            <li id="" class="mx-3 menu-item"><a href="{% url "video:category_detail" category.slug %}"
+                                                class="nav-menu-item ">{{ category.title }}</a>
                 <ul class="sub-menu">
                     {% for child in category.children.all %}
                         <a href="{% url "video:category_detail" child.slug %}">{{ child.title }}</a>
@@ -153,3 +173,23 @@
     {% endfor %}
 
 </nav>
+<script>
+
+    // To Delete the notification that is sent to user
+    // Notifications are sent because someone has replied to this user's comment
+    function delete_user_notif(notif_id, video_id, comment_id) {
+        $.get(`http://127.0.0.1:8000/video/delete-comment-notif/${notif_id}`).then(
+            window.location.href = `http://127.0.0.1:8000/video/${video_id}#comment_${comment_id}`,
+        )
+    }
+
+    // To delete the notification that is sent to user
+    // This notification is sent by site admin
+    function delete_admin_notif(notif_id) {
+        $.get(`http://127.0.0.1:8000/video/delete-admin-notif/${notif_id}`).then(function () {
+                window.location.reload();
+            }
+        )
+    }
+
+</script>

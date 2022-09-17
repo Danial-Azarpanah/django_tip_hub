@@ -98,6 +98,8 @@
                                 <form action="" method="post">
                                     {% csrf_token %}
                                     <input id="parent_id" name="parent_id" value="" type="hidden">
+                                    <input id="sender" name="sender" value="" type="hidden">
+                                    <input id="receiver" name="receiver" value="" type="hidden">
                                     <textarea class="w-100 p-2 comment-area" name="body" id="" cols="30" rows="10"
                                               placeholder="دیدگاه خود را بنویسید"></textarea>
                                     <div class="d-flex align-items-center justify-content-end pt-3">
@@ -107,7 +109,7 @@
                                 <!-- comment -->
                                 {% for comment in video.comments.all %}
                                     {% if comment.parent == None %}
-                                        <div class="comment my-3 p-2">
+                                        <div class="comment my-3 p-2" id="comment_{{ comment.id }}">
                                             <div class=" d-flex align-items-center justify-content-between">
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     {% if comment.user.image %}
@@ -125,7 +127,8 @@
                                             <p class="px-4 py-2 comment-text text-justify">{{ comment.body }}</p>
 
                                             <div class="d-flex align-items-center justify-content-end reply"
-                                                 type='button' onclick="reply({{ comment.id }})">
+                                                 type='button'
+                                                 onclick="reply('{{ comment.id }}', '{{ request.user.email }}', '{{ comment.user }}')">
                                                 <i class="fa fa-reply"></i>
                                                 <p>پاسخ به این نظر</p>
                                             </div>
@@ -229,8 +232,10 @@
             videoOverlay.style.display = 'none'
         }
 
-        function reply(id) {
+        function reply(id, pk1, pk2) {
             document.getElementById("parent_id").value = id;
+            document.getElementById("sender").value = pk1;
+            document.getElementById("receiver").value = pk2;
             window.location.href = "#comment_body"
         }
 

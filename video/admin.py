@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Video, Tag, Comment
+from .models import Category, Video, Tag, Comment, UserNotification, AdminNotification
 
 
 @admin.register(Category)
@@ -21,7 +21,17 @@ class VideoAdmin(admin.ModelAdmin):
     ordering = ['-created_at']
     exclude = ['likes']
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ["user", "parent", "video"]
+    list_display = ["user", "show_body", "parent", "video"]
     search_fields = ["user__email", "body", "video__title"]
+
+
+@admin.register(AdminNotification)
+class AdminNotificationAdmin(admin.ModelAdmin):
+    list_display = ["sender", "subject"]
+    search_fields = ["subject"]
+
+
+admin.site.register(UserNotification)

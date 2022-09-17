@@ -112,6 +112,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'کامنت'
         verbose_name_plural = 'کامنت‌ها'
+        ordering = ["-video__id"]
 
     def get_time_diff(self):
         """
@@ -135,7 +136,47 @@ class Comment(models.Model):
             else:
                 return f'{timediff.seconds} ثانیه پیش'
 
-    def __str__(self):
-        return self.body[:20]
+    def show_body(self):
+        """To show only the first 25 characters in admin panel"""
+        return self.body[:25]
 
 
+class UserNotification(models.Model):
+    """
+    The model for saving which user has replied which user on which comment
+    """
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
+                               related_name="user_notif_sender",
+                               verbose_name="فرستنده")
+    receiver = models.ForeignKey(User, null=True, on_delete=models.SET_NULL,
+                                 related_name="user_notif_receiver",
+                                 verbose_name="گیرنده")
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True,
+                                blank=True, related_name="notifications",
+                                verbose_name="کامنت مربوطه")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "پیام خصوصی"
+        verbose_name_plural = "پیام‌های خصوصی"
+        ordering = ["-created_at"]
+
+
+class AdminNotification(models.Model):
+    """
+    The model to save website admins' message sent to selected users
+    """
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
+                               related_name="admin_notif_sender",
+                               verbose_name="فرستنده")
+    receiver = models.ManyToManyField(User, null=True,
+                                      related_name="admin_notif_receiver",
+                                      verbose_name="گیرنده")
+    subject = models.CharField(max_length=30, verbose_name="موضوع")
+    message = models.TextField(verbose_name="پیام")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "اعلان سایت"
+        verbose_name_plural = "اعلانات سایت"
+        ordering = ["-created_at"]

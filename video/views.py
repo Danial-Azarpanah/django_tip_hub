@@ -1,12 +1,14 @@
-from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.views.generic import ListView
+from django.db.models import Q
 
-from hitcount.views import HitCountMixin
 from hitcount.utils import get_hitcount_model
+from hitcount.views import HitCountMixin
 
-from .models import Video, Comment, Category
+from .models import Video, Comment, Category, \
+    UserNotification, AdminNotification
+from account.models import User
 
 
 class VideoListView(ListView):
@@ -38,8 +40,8 @@ def video_detail(request, pk):
         hitcontext['hit_message'] = hit_count_response.hit_message
         hitcontext['total_hits'] = hits
 
+    # Check if the video is liked by the user
     if request.user.is_authenticated:
-        # Check if the video is liked by the user
         if video.likes.filter(email=request.user.email).exists():
             context["is_liked"] = True
         else:
@@ -50,6 +52,18 @@ def video_detail(request, pk):
         parent_id = request.POST.get("parent_id")
         body = request.POST.get("body")
         Comment.objects.create(body=body, video=video, user=request.user, parent_id=parent_id)
+
+        # if true, create a object for notification to display to replied user
+        if parent_id:
+            sender = request.POST.get("sender")
+            sender = User.objects.get(email=sender)
+            receiver = request.POST.get("receiver")
+            receiver = User.objects.get(email=receiver)
+            # if users hasn't replied his own comment, create notification
+            if sender != receiver:
+                UserNotification.objects.create(sender=sender,
+                                                receiver=receiver,
+                                                comment_id=parent_id)
 
     return render(request, "video/video_detail.html", context)
 
@@ -91,3 +105,23 @@ def search(request):
     objects_list = paginator.get_page(page_number)
 
     return render(request, "video/search_result.html", {"videos": objects_list})
+
+
+def delete_comment_notif(request, pk):
+    """
+    This view deletes the reply notification object
+    """
+    notif = UserNotification.objects.get(id=pk)
+    notif.delete()
+    return render(request, 'video/all_videos.html')
+
+
+def delete_admin_notif(request, pk):
+    """
+    This view removes the user from the public message's receivers
+    so the notification is not shown to user anymore
+    """
+    notif = AdminNotification.objects.get(id=pk)
+    notif.receiver.remove(request.user)
+    print(list(notif.receiver.all()))
+    return render(request, "video/all_videos.html")
