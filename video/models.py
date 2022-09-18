@@ -68,7 +68,7 @@ class Video(models.Model):
                                      allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     likes = models.ManyToManyField(User, related_name="likes", default=None, blank=True)
     like_count = models.BigIntegerField(default="0")
-    hit_count_generic = GenericRelation(HitCount, object_id_field='object_p',
+    hit_count_generic = GenericRelation(HitCount, object_id_field='id',
                                         related_query_name='hit_count_generic_relation')
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE,
