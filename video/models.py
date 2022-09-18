@@ -38,7 +38,8 @@ class Tag(models.Model):
     Class for tags of videos
     (Every video can have multiple tags)
     """
-    title = models.CharField(max_length=20, verbose_name='عنوان')
+    title = models.CharField(max_length=20, verbose_name='عنوان',
+                             unique=True)
     slug = models.SlugField(unique=True, allow_unicode=True,
                             verbose_name='اسلاگ')
 
@@ -112,7 +113,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'کامنت'
         verbose_name_plural = 'کامنت‌ها'
-        ordering = ["-video__id"]
+        ordering = ["-video__id", "parent__id"]
 
     def get_time_diff(self):
         """
