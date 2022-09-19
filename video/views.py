@@ -27,7 +27,13 @@ def video_detail(request, pk):
     with comment and reply capability
     """
     video = get_object_or_404(Video, id=pk)
-    context = {"video": video}
+
+    # Comments pagination (infinite scroll)
+    page_number = request.GET.get("page")
+    paginator = Paginator(video.comments.all(), 10)
+    objects_list = paginator.get_page(page_number)
+
+    context = {"video": video, "comments": objects_list}
 
     # Hit (visit) counter algorythm
     hit_count = get_hitcount_model().objects.get_for_object(video)

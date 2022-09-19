@@ -107,59 +107,71 @@
                                     </div>
                                 </form>
                                 <!-- comment -->
-                                {% for comment in video.comments.all %}
-                                    {% if comment.parent == None %}
-                                        <div class="comment my-3 p-2" id="comment_{{ comment.id }}">
-                                            <div class=" d-flex align-items-center justify-content-between">
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    {% if comment.user.image %}
-                                                        <img src="{{ comment.user.image.url }}" alt="student"
-                                                             class="user-profile">
-                                                    {% else %}
-                                                        <img src="{% static "image/sutdent-prof.png" %}" alt="student"
-                                                             class="user-profile">
-                                                    {% endif %}
-                                                    <p class="user-name pr-2">{{ comment.user.get_full_name }}</p>
-                                                </div>
-
-                                                <p class="comment-date-time">{{ comment.get_time_diff }}</p>
-                                            </div>
-                                            <p class="px-4 py-2 comment-text text-justify">{{ comment.body }}</p>
-
-                                            <div class="d-flex align-items-center justify-content-end reply"
-                                                 type='button'
-                                                 onclick="reply('{{ comment.id }}', '{{ request.user.email }}', '{{ comment.user }}')">
-                                                <i class="fa fa-reply"></i>
-                                                <p>پاسخ به این نظر</p>
-                                            </div>
-                                        </div>
-                                        {% for reply in comment.replies.all %}
-                                            <div class="comment my-3 p-2 comment-child">
+                                <div class="infinite-container">
+                                    {% for comment in comments %}
+                                        {% if comment.parent == None %}
+                                            <div class="comment my-3 p-2 infinite-item" id="comment_{{ comment.id }}">
                                                 <div class=" d-flex align-items-center justify-content-between">
                                                     <div class="d-flex align-items-center justify-content-center">
-                                                        {% if reply.user.image %}
-                                                            <img src="{{ reply.user.image.url }}" alt="student"
+                                                        {% if comment.user.image %}
+                                                            <img src="{{ comment.user.image.url }}" alt="student"
                                                                  class="user-profile">
                                                         {% else %}
                                                             <img src="{% static "image/sutdent-prof.png" %}"
                                                                  alt="student"
                                                                  class="user-profile">
                                                         {% endif %}
-                                                        <p class="user-name pr-2">{{ reply.user.get_full_name }}</p>
+                                                        <p class="user-name pr-2">{{ comment.user.get_full_name }}</p>
                                                     </div>
 
-                                                    <p class="comment-date-time">{{ reply.get_time_diff }}</p>
+                                                    <p class="comment-date-time">{{ comment.get_time_diff }}</p>
                                                 </div>
-                                                <p class="px-4 py-2 comment-text text-justify">
-                                                    {{ reply.body }}
-                                                </p>
+                                                <p class="px-4 py-2 comment-text text-justify">{{ comment.body }}</p>
+
+                                                <div class="d-flex align-items-center justify-content-end reply"
+                                                     type='button'
+                                                     onclick="reply('{{ comment.id }}', '{{ request.user.email }}', '{{ comment.user }}')">
+                                                    <i class="fa fa-reply"></i>
+                                                    <p>پاسخ به این نظر</p>
+                                                </div>
                                             </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endfor %}
+                                            {% for reply in comment.replies.all %}
+                                                <div class="comment my-3 p-2 comment-child">
+                                                    <div class=" d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            {% if reply.user.image %}
+                                                                <img src="{{ reply.user.image.url }}" alt="student"
+                                                                     class="user-profile">
+                                                            {% else %}
+                                                                <img src="{% static "image/sutdent-prof.png" %}"
+                                                                     alt="student"
+                                                                     class="user-profile">
+                                                            {% endif %}
+                                                            <p class="user-name pr-2">{{ reply.user.get_full_name }}</p>
+                                                        </div>
+
+                                                        <p class="comment-date-time">{{ reply.get_time_diff }}</p>
+                                                    </div>
+                                                    <p class="px-4 py-2 comment-text text-justify">
+                                                        {{ reply.body }}
+                                                    </p>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                                 <!-- end comment -->
                             </div>
                             <!-- end comments -->
+                            <div class="d-flex align-items-center justify-content-center mb-3 pagination">
+
+                                {% if comments.has_next %}
+                                    <a href="?page={{ comments.next_page_number }}" class="mx-1 infinite-more-link">
+                                        <i class="fa fa-chevron-left"></i>
+                                    </a>
+                                {% endif %}
+
+                            </div>
                         </div>
                     </div>
                     <!-- main -->
@@ -232,6 +244,7 @@
             videoOverlay.style.display = 'none'
         }
 
+        // For reply and notification sending
         function reply(id, pk1, pk2) {
             document.getElementById("parent_id").value = id;
             document.getElementById("sender").value = pk1;
@@ -239,6 +252,7 @@
             window.location.href = "#comment_body"
         }
 
+        // For like and unlike operations
         $(document).on("click", "#like_button", function (e) {
             e.preventDefault();
             $.ajax({
@@ -262,5 +276,20 @@
                 }
             });
         })
+    </script>
+
+    <script src="{% static "js/jquery.waypoints.min.js" %}"></script>
+    <script src="{% static "js/infinite.min.js" %}"></script>
+    <script>
+        // For loading comments as scroll
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function ($items) {
+                $('.loading').hide();
+            }
+        });
     </script>
 {% endblock %}
