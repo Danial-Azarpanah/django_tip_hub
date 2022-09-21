@@ -1,7 +1,10 @@
 from django.contrib import admin
 
 from account.models import User
-from .models import Category, Video, Tag, Comment, UserNotification, AdminNotification
+from .models import Category, Video, Tag, Comment,\
+    UserNotification, AdminNotification, IPAddress
+
+admin.site.register(IPAddress)
 
 
 @admin.register(Category)

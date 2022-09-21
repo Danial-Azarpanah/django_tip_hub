@@ -35,16 +35,10 @@ def video_detail(request, pk):
 
     context = {"video": video, "comments": objects_list}
 
-    # Hit (visit) counter algorythm
-    hit_count = get_hitcount_model().objects.get_for_object(video)
-    hits = hit_count.hits
-    hitcontext = context['hitcount'] = {'pk': hit_count.pk}
-    hit_count_response = HitCountMixin.hit_count(request, hit_count)
-    if hit_count_response.hit_counted:
-        hits = hits + 1
-        hitcontext['hit_counted'] = hit_count_response.hit_counted
-        hitcontext['hit_message'] = hit_count_response.hit_message
-        hitcontext['total_hits'] = hits
+    # View counter algorithm with IP address
+    ip_address = request.user.ip_address
+    if ip_address not in video.hits.all():
+        video.hits.add(ip_address)
 
     # Check if the video is liked by the user
     if request.user.is_authenticated:

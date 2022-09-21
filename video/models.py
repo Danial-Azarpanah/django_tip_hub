@@ -51,6 +51,14 @@ class Tag(models.Model):
         return self.title
 
 
+class IPAddress(models.Model):
+    """
+    For tracking IP adress of users
+    to count views on videos
+    """
+    ip_address = models.GenericIPAddressField(verbose_name="آدرس آی پی")
+
+
 class Video(models.Model):
     """
     Class for videos
@@ -68,8 +76,9 @@ class Video(models.Model):
                                      allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     likes = models.ManyToManyField(User, related_name="likes", default=None, blank=True)
     like_count = models.BigIntegerField(default="0")
-    hit_count_generic = GenericRelation(HitCount, object_id_field='id',
-                                        related_query_name='hit_count_generic_relation')
+    hits = models.ManyToManyField(IPAddress, blank=True,
+                                  related_name="hits",
+                                  verbose_name="بازدیدها")
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE,
                                 related_name='videos',
