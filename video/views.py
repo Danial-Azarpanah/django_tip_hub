@@ -3,9 +3,6 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView
 from django.db.models import Q
 
-from hitcount.utils import get_hitcount_model
-from hitcount.views import HitCountMixin
-
 from .models import Video, Comment, Category, \
     UserNotification, AdminNotification
 from account.models import User
@@ -46,6 +43,12 @@ def video_detail(request, pk):
             context["is_liked"] = True
         else:
             context["is_liked"] = False
+
+    # Check if video is added to favorites by user
+    if video.favorites.filter(id=request.user.id).exists():
+        context["is_fav"] = True
+    else:
+        context["is_fav"] = False
 
     # if method is POST, so we're getting comment or reply from a user
     if request.method == "POST":

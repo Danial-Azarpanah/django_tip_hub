@@ -1,6 +1,4 @@
-from django.contrib.contenttypes.fields import GenericRelation
 from django.core.validators import FileExtensionValidator
-from hitcount.models import HitCount
 from django.utils.html import format_html
 from django.utils.timezone import utc
 from django.db import models
@@ -79,6 +77,9 @@ class Video(models.Model):
     hits = models.ManyToManyField(IPAddress, blank=True,
                                   related_name="hits",
                                   verbose_name="بازدیدها")
+    favorites = models.ManyToManyField(User, default=None, blank=None,
+                                       related_name="favorites",
+                                       verbose_name="مورد علاقه‌ها")
     created_at = jmodels.jDateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE,
                                 related_name='videos',

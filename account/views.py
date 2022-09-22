@@ -1,5 +1,5 @@
+from django.views.generic import CreateView, TemplateView, UpdateView, ListView
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import CreateView, TemplateView, UpdateView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
@@ -7,6 +7,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.template.loader import render_to_string
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
 from django.contrib.auth import login
 from django.urls import reverse_lazy
@@ -168,3 +169,33 @@ def like(request):
             video.save()
 
         return JsonResponse({"result": result, "liked": liked})
+
+
+def favorite_add(request, pk):
+    """
+    Add or remove a video from favorites
+    """
+    video = get_object_or_404(Video, id=pk)
+
+    if video.favorites.filter(id=request.user.id).exists():
+        video.favorites.remove(request.user)
+        return JsonResponse({"response": "deleted"})
+    else:
+        video.favorites.add(request.user)
+        return JsonResponse({"response": "added"})
+
+
+class FavoriteListView(ListView):
+    """
+    View to display user's favorite videos
+    """
+
+    def get(self, request):
+        videos = Video.objects.filter(favorites=request.user)
+        # pagination
+        page_number = request.GET.get("page")
+        paginator = Paginator(videos, 1)
+        objects_list = paginator.get_page(page_number)
+
+        return render(request, "account/favorites.html", {"videos": objects_list})
+

@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load jformat %}
-{% load hitcount_tags %}
 
 {% block title %}
     {{ video.title }}
@@ -66,6 +65,25 @@
                                                id="" href="{% url "account:login" %}">
                                                 <i class="fa fa-heart-o" id="heart" type='button'
                                                    aria-hidden="true"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mx-3">
+                                        {% if request.user.is_authenticated %}
+                                            {% if is_fav %}
+                                                <a class="text-dark"
+                                                   onclick="fav_add_del({{ video.id }})">
+                                                    <i class="fa fa-bookmark" id="favorite"></i>
+                                                </a>
+                                            {% else %}
+                                                <a class="text-dark"
+                                                   onclick="fav_add_del({{ video.id }})">
+                                                    <i class="fa fa-bookmark-o" id="favorite" type="button"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% else %}
+                                            <a class="text-dark" href="{% url "account:login" %}">
+                                                <i class="fa fa-bookmark-o" type="button"></i>
                                             </a>
                                         {% endif %}
                                     </div>
@@ -292,4 +310,5 @@
             }
         });
     </script>
+    <script src="{% static "js/ajax.js" %}"></script>
 {% endblock %}

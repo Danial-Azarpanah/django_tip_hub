@@ -72,7 +72,7 @@
                             <div class="dropdown-menu account-menu-items custom-bg"
                                  aria-labelledby="dropdownMenuButton">
                                 <a class="" href="{% url 'account:profile' %}"> پروفایل</a>
-                                <a class="" href="#"> مورد علاقه ها</a>
+                                <a class="" href="{% url 'account:favorite_list' %}"> مورد علاقه ها</a>
                                 <a class="" href="{% url 'account:logout' %}"> خروج</a>
                             </div>
                         {% else %}

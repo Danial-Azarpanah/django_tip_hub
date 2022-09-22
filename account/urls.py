@@ -17,6 +17,10 @@ urlpatterns = [
     # video liking url
     path("like", views.like, name="like"),
 
+    # favorites add and favorites' list
+    path("add-favorite/<int:pk>", views.favorite_add, name="favorite_add"),
+    path("favorite-list", views.FavoriteListView.as_view(), name="favorite_list"),
+
     # password reset urls
     path('reset-password/', views.CustomPasswordResetView.as_view(), name='reset_password'),
 
