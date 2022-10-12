@@ -11,6 +11,7 @@ from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
 from django.contrib.auth import login
 from django.urls import reverse_lazy
+from django.views import View
 
 from .forms import UserCreationForm, UserLoginForm, UserEditForm
 from .tokens import account_activation_token
@@ -124,31 +125,34 @@ class CustomPasswordResetView(PasswordResetView):
         return super().get(*args, **kwargs)
 
 
-def activate(request, uidb64, token):
+class ActivateView(View):
     """
     View for activating new accounts
     after clicking on the link in
     activation email
     """
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return redirect('home:main')
-    else:
-        return HttpResponse('Activation link is invalid!')
+
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('home:main')
+        else:
+            return HttpResponse('Activation link is invalid!')
 
 
-def like(request):
+class LikeView(View):
     """
     View to like videos with ajax
     """
-    if request.method == "POST":
+
+    def post(self, request):
         result = ""
         id = int(request.POST.get("videoid"))
         video = get_object_or_404(Video, id=id)
@@ -171,18 +175,20 @@ def like(request):
         return JsonResponse({"result": result, "liked": liked})
 
 
-def favorite_add(request, pk):
+class AddFavoriteView(View):
     """
     Add or remove a video from favorites
     """
-    video = get_object_or_404(Video, id=pk)
 
-    if video.favorites.filter(id=request.user.id).exists():
-        video.favorites.remove(request.user)
-        return JsonResponse({"response": "deleted"})
-    else:
-        video.favorites.add(request.user)
-        return JsonResponse({"response": "added"})
+    def get(self, request, pk):
+        video = get_object_or_404(Video, id=pk)
+
+        if video.favorites.filter(id=request.user.id).exists():
+            video.favorites.remove(request.user)
+            return JsonResponse({"response": "deleted"})
+        else:
+            video.favorites.add(request.user)
+            return JsonResponse({"response": "added"})
 
 
 class FavoriteListView(ListView):
@@ -198,4 +204,3 @@ class FavoriteListView(ListView):
         objects_list = paginator.get_page(page_number)
 
         return render(request, "account/favorites.html", {"videos": objects_list})
-

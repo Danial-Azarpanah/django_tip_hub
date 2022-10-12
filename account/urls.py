@@ -10,15 +10,15 @@ urlpatterns = [
     path('logout', LogoutView.as_view(next_page='home:main'), name='logout'),
     path('register', views.RegisterUserView.as_view(), name='register'),
     path("activate/(?P<uidb64>[0-9A-Za-z_\\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/",
-         views.activate, name='activate'),
+         views.ActivateView.as_view(), name='activate'),
     path('profile', views.ProfileView.as_view(), name='profile'),
     path('profile/edit/<int:pk>', views.ProfileEditView.as_view(), name='edit-profile'),
 
     # video liking url
-    path("like", views.like, name="like"),
+    path("like", views.LikeView.as_view(), name="like"),
 
     # favorites add and favorites' list
-    path("add-favorite/<int:pk>", views.favorite_add, name="favorite_add"),
+    path("add-favorite/<int:pk>", views.AddFavoriteView.as_view(), name="favorite_add"),
     path("favorite-list", views.FavoriteListView.as_view(), name="favorite_list"),
 
     # password reset urls

@@ -54,7 +54,8 @@ class VideoAdmin(admin.ModelAdmin):
     list_display = ['title', 'creator', 'show_image']
     list_filter = ['category', 'tag']
     ordering = ['-created_at']
-    exclude = ['likes']
+    exclude = ['likes', 'hits', 'like_count', 'favorites']
+    readonly_fields = ['creator', 'created_at', 'show_hit_count', 'like_count']
 
     # Staff can only delete their own Video
     def has_delete_permission(self, request, obj=None):
@@ -65,9 +66,8 @@ class VideoAdmin(admin.ModelAdmin):
 
     # Staff can only edit their own Video's info
     def has_change_permission(self, request, obj=None):
-        if not request.user.is_superuser:
-            if obj is not None and obj.creator != request.user:
-                return False
+        if obj is not None and obj.creator != request.user:
+            return False
         return True
 
     # Staff can only set themselves as Video creator

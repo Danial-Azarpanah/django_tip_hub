@@ -4,6 +4,7 @@ from django.contrib import admin
 
 from social_django.models import Association, Nonce, UserSocialAuth
 
+from video.models import IPAddress
 from . import settings
 
 urlpatterns = [
@@ -19,3 +20,4 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 admin.site.unregister(Association)
 admin.site.unregister(Nonce)
 admin.site.unregister(UserSocialAuth)
+admin.site.unregister(IPAddress)

@@ -214,10 +214,18 @@
 
                             {% if video.creator.instagram %}
                                 <div class="teacher-social-media d-flex align-items-center justify-content-center flex-wrap">
-                                    <a href="{{ video.creator.instagram }}"> <i class="fa fa-instagram"></i></a>
-                                    <a href="{{ video.creator.github }}"> <i class="fa fa-github"></i></a>
-                                    <a href="{{ video.creator.linkedin }}"> <i class="fa fa-linkedin"></i></a>
-                                    <a href="{{ video.creator.twitter }}"> <i class="fa fa-twitter"></i></a>
+                                    {% if video.creator.instagram %}
+                                        <a href="{{ video.creator.instagram }}"> <i class="fa fa-instagram"></i></a>
+                                    {% endif %}
+                                    {% if video.creator.twitter %}
+                                        <a href="{{ video.creator.twitter }}"> <i class="fa fa-twitter"></i></a>
+                                    {% endif %}
+                                    {% if video.creator.linkedin %}
+                                        <a href="{{ video.creator.linkedin }}"> <i class="fa fa-linkedin"></i></a>
+                                    {% endif %}
+                                    {% if video.creator.github %}
+                                        <a href="{{ video.creator.github }}"> <i class="fa fa-github"></i></a>
+                                    {% endif %}
                                 </div>
                             {% endif %}
                         </div>

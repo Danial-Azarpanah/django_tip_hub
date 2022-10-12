@@ -21,7 +21,14 @@
                                 <div class="col-lg-6 mb-4">
                                     <p class="">نام و نام خانوادگی:</p>
                                     <h6 class=" font-weight-bold">
-                                        {{ request.user.first_name }} {{ request.user.last_name }}
+                                        {% if request.user.first_name %}
+                                            {{ request.user.first_name }}
+                                            {% if request.user.last_name %}
+                                                {{ request.user.last_name }}
+                                            {% endif %}
+                                        {% else %}
+                                            نامشخص
+                                        {% endif %}
                                     </h6>
                                 </div>
 
@@ -32,7 +39,13 @@
 
                                 <div class="col-lg-6 mb-4">
                                     <p class="">شماره تلفن همراه:</p>
-                                    <h6 class=" font-weight-bold">{{ request.user.phone_number }}</h6>
+                                    <h6 class=" font-weight-bold">
+                                        {% if request.user.phone_number %}
+                                            {{ request.user.phone_number }}
+                                        {% else %}
+                                            نامشخص
+                                        {% endif %}
+                                    </h6>
                                 </div>
 
                                 <div class="col-lg-6 mb-4">

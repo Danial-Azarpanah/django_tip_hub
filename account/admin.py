@@ -15,10 +15,7 @@ class UserAdmin(BaseUserAdmin):
     form = UserEditForm
     add_form = UserCreationForm
 
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
-    list_display = ('email', 'username', 'is_active', 'is_superuser')
+    list_display = ('email', 'username', 'is_active', 'is_staff', 'is_superuser')
     list_filter = ('is_active', 'is_superuser', 'is_staff')
     fieldsets = (
         (None, {'fields': ('email', 'username', 'phone_number', 'password')}),
@@ -26,8 +23,6 @@ class UserAdmin(BaseUserAdmin):
                                      'instagram', 'github', 'linkedin', 'twitter')}),
         ('دسترسی‌ها', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
     )
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (
         (None, {'fields': ('email', 'username', 'phone_number', 'password')}),
         ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'image', 'bio',

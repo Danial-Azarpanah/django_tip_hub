@@ -73,14 +73,14 @@ class Video(models.Model):
                                  FileExtensionValidator(
                                      allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     likes = models.ManyToManyField(User, related_name="likes", default=None, blank=True)
-    like_count = models.BigIntegerField(default="0")
+    like_count = models.BigIntegerField(default="0", verbose_name="تعداد لایک‌ها")
     hits = models.ManyToManyField(IPAddress, blank=True,
                                   related_name="hits",
                                   verbose_name="بازدیدها")
     favorites = models.ManyToManyField(User, default=None, blank=None,
                                        related_name="favorites",
                                        verbose_name="مورد علاقه‌ها")
-    created_at = jmodels.jDateTimeField(auto_now_add=True)
+    created_at = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ آپلود ویدئو")
     creator = models.ForeignKey(User, on_delete=models.CASCADE,
                                 related_name='videos',
                                 verbose_name='سازنده محتوا')
@@ -99,10 +99,15 @@ class Video(models.Model):
         else:
             return format_html('<h3 style="color: red">بدون تصویر</h3>')
 
-    show_image.short_description = 'تصویر'
+    # Function to show the amount of views the video has claimed
+    def show_hit_count(self):
+        return self.hits.count()
 
     def __str__(self):
         return self.title
+
+    show_image.short_description = 'تصویر'
+    show_hit_count.short_description = "تعداد بازدید"
 
 
 class Comment(models.Model):

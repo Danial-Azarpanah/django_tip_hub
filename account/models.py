@@ -28,16 +28,16 @@ class User(AbstractBaseUser):
     bio = models.TextField(
         null=True, blank=True)
     instagram = models.URLField(
-        blank=True, null=True, unique=True,
+        blank=True, null=True,
         verbose_name='آیدی اینستاگرام')
     github = models.URLField(
-        blank=True, null=True, unique=True,
+        blank=True, null=True,
         verbose_name='آدرس گیتهاب')
     linkedin = models.URLField(
-        blank=True, null=True, unique=True,
+        blank=True, null=True,
         verbose_name='آدرس لینکدین')
     twitter = models.URLField(
-        blank=True, null=True, unique=True,
+        blank=True, null=True,
         verbose_name='آدرس توییتر')
     is_active = models.BooleanField(
         default=True, verbose_name='فعال')
