@@ -13,7 +13,7 @@ from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.views import View
 
-from .forms import UserCreationForm, UserLoginForm, UserEditForm
+from .forms import UserCreationForm, UserLoginForm, UserEditForm, PasswordEditForm
 from .tokens import account_activation_token
 from .models import User
 from video.models import Video
@@ -89,6 +89,8 @@ class ProfileEditView(UpdateView):
     model = User
     template_name = 'account/edit-user-panel.html'
     form_class = UserEditForm
+    slug_field = "username"
+    slug_url_kwarg = "username"
 
     def form_valid(self, form):
         form.save()
@@ -99,6 +101,33 @@ class ProfileEditView(UpdateView):
         if not self.request.user.is_authenticated:
             return redirect('account:login')
         return super().get(*args, **kwargs)
+
+
+class PasswordEditView(View):
+    """
+    View for changing user password
+    via edit profile panel (not reset password)
+    """
+
+    def get(self, request, pk):
+        if not request.user.is_authenticated:
+            return redirect("account:login")
+        user = User.objects.get(username=pk)
+        form = PasswordEditForm
+        context = {"user": user, "form": form}
+        return render(request, "account/edit_password.html", context)
+
+    def post(self, request, pk):
+        form = PasswordEditForm(request.POST)
+        user = User.objects.get(username=pk)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user.set_password(cd["password1"])
+            user.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return render(request, "account/user-panel.html", {"message": 'تغییر گذرواژه موفقیت آمیز بود'})
+
+        return render(request, 'account/edit_password.html', context={'form': form})
 
 
 class CustomPasswordResetView(PasswordResetView):

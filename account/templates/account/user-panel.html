@@ -12,7 +12,9 @@
             <div class="container">
                 <div class="row d-flex justify-content-center">
                     <div class="col-sm-9 col-md-8 col-lg-8">
-
+                        <li style="list-style-type: disc; color: #ad3f4a" class="text-center">
+                            {{ message }}
+                        </li>
                         <!-- item1 -->
 
                         <div class="p-3 custom-bg user-details user-item my-2">
@@ -55,7 +57,7 @@
 
                                 <div class="col-12">
                                     <div class="text-center">
-                                        <a class="" href="{% url 'account:edit-profile' user.id %}">
+                                        <a class="" href="{% url 'account:edit-profile' user.username %}">
                                             <i class="fa fa-edit"></i>
                                             ویرایش اطلاعات شخصی
                                         </a>

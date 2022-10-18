@@ -12,7 +12,8 @@ urlpatterns = [
     path("activate/(?P<uidb64>[0-9A-Za-z_\\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/",
          views.ActivateView.as_view(), name='activate'),
     path('profile', views.ProfileView.as_view(), name='profile'),
-    path('profile/edit/<int:pk>', views.ProfileEditView.as_view(), name='edit-profile'),
+    path('profile/edit/<str:username>', views.ProfileEditView.as_view(), name='edit-profile'),
+    path('profile/edit-password/<str:pk>', views.PasswordEditView.as_view(), name="edit_password"),
 
     # video liking url
     path("like", views.LikeView.as_view(), name="like"),

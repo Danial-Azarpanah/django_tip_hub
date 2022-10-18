@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -120,3 +120,24 @@ class UserEditForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email',
                   'phone_number', 'username', 'bio', 'image',
                   'instagram', 'github', 'linkedin', 'twitter')
+
+
+class PasswordEditForm(forms.ModelForm):
+    """
+    Form for changing the password of an authenticated user
+    """
+    password1 = forms.CharField(label='گذرواژه', widget=forms.PasswordInput(attrs={'placeholder': 'گذرواژه جدید'}))
+    password2 = forms.CharField(label='گذرواژه', widget=forms.PasswordInput(attrs={'placeholder': 'تکرار گذرواژه جدید'}))
+
+    class Meta:
+        model = User
+        fields = ["password1", "password2"]
+
+    def clean(self):
+        cd = self.cleaned_data
+        if cd.get("password1") != cd.get("password2"):
+            raise ValidationError("گذرواژه ها یکسان نیستند، لطفا دوباره امتحان نمائید", "different_passwords")
+        if len(cd.get("password1")) < 8:
+            raise ValidationError("طول گذرواژه باید بیشتر از ۸ کاراکتر باشد", "short_password")
+
+
