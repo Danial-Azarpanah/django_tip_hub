@@ -140,9 +140,9 @@ class Comment(models.Model):
             timediff = now - self.created_at
 
             if timediff.days > 365:
-                return f'{timediff // 365} سال پیش'
+                return f'{timediff.days // 365} سال پیش'
             elif timediff.days > 30:
-                return f'{timediff // 30} ماه پیش'
+                return f'{timediff.days // 30} ماه پیش'
             elif timediff.days > 0:
                 return f'{timediff.days} روز پیش'
             elif timediff.seconds > 3600:

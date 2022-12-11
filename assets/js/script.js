@@ -13,7 +13,7 @@
        shadow.classList.remove('showShadow')
    })
 
-    
+
 
      // to persianNumbers after loading website
      $(document).ready(function () {
@@ -40,29 +40,13 @@
       $(document).ajaxComplete(function () {
         ConvertNumberToPersion();
       });
-      function ConvertNumberToPersion() {
-        persian = { 0: '۰', 1: '۱', 2: '۲', 3: '۳', 4: '۴', 5: '۵', 6: '۶', 7: '۷', 8: '۸', 9: '۹' };
-        function traverse(el) {
-          if (el.nodeType == 3) {
-            var list = el.data.match(/[0-9]/g);
-            if (list != null && list.length != 0) {
-              for (var i = 0; i < list.length; i++)
-                el.data = el.data.replace(list[i], persian[list[i]]);
-            }
-          }
-          for (var i = 0; i < el.childNodes.length; i++) {
-            traverse(el.childNodes[i]);
-          }
-        }
-        traverse(document.body);
-      }
     //   end to persianNumbers
 
     // menu-controler-pc
     let subMenu = document.querySelectorAll('.sub-menu')
     var prevScrollpos = window.pageYOffset;
     window.onscroll = function () {
-      
+
         var currentScrollPos = window.pageYOffset;
         if (prevScrollpos > currentScrollPos) {
             document.getElementById("navbar").style.top = "80px";
@@ -72,9 +56,9 @@
             catch(err) {
               var sam = 0
             }
-            
+
         } else {
-          
+
             let status = false
             for (let i = 0; i < subMenu.length; i++) {
                 let stil = window.getComputedStyle(subMenu[i]).getPropertyValue('display')

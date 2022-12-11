@@ -63,10 +63,10 @@ class RegisterUserView(CreateView):
         return render(self.request, 'account/email_confirmation.html')
 
     # Redirect the user to home page if already authenticated
-    def get(self, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            return redirect('home:main')
-        return super(RegisterUserView, self).get(*args, **kwargs)
+    # def get(self, *args, **kwargs):
+    #     if self.request.user.is_authenticated:
+    #         return redirect('home:main')
+    #     return super(RegisterUserView, self).get(*args, **kwargs)
 
 
 class ProfileView(TemplateView):
